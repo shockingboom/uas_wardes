@@ -41,12 +41,15 @@
     <h4 class="text-center fw-bold mb-4">Warung Desa</h4>
     <a href="{{ route('admin.dashboard') }}">📊 Dashboard</a>
     <a href="{{ route('admin.item.index') }}">🍱 Manajemen Menu</a>
-    <a href="{{ route('admin.pesanan') }}">🧾 Pesanan Masuk</a>
+    <a href="{{ route('admin.table.index') }}">🪑 Manajemen Meja</a>
+    <a href="{{ route('admin.pesanan.index') }}">status</a>
+    {{-- <a href="{{ route('admin.pesanan') }}">🧾 Pesanan Masuk</a> --}}
 </div>
 
 <div class="content">
     @yield('content')
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
