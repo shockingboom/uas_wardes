@@ -9,11 +9,12 @@ class DashboardController extends Controller
 {
 public function index()
 {
-    $totalPesanan = \App\Models\Pesanan::count();
-    $totalProduk = \App\Models\Item::count(); // pakai Item, bukan Produk
-    $totalPendapatan = \App\Models\Pesanan::sum('total_harga');
+    // $totalPesanan = \App\Models\Pesanan::count();
+    $totalProduk = \App\Models\Item::count();
+    // $totalPendapatan = \App\Models\Pesanan::sum('total_harga');
+    $totalMeja = \App\Models\Table::count();
 
-    return view('admin.dashboard', compact('totalPesanan', 'totalProduk', 'totalPendapatan'));
+    return view('admin.dashboard', compact('totalProduk', 'totalMeja'));
 }
 
 
