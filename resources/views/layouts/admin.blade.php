@@ -44,6 +44,17 @@
     <a href="{{ route('admin.table.index') }}">🪑 Manajemen Meja</a>
     <a href="{{ route('admin.pesanan.index') }}">status</a>
     {{-- <a href="{{ route('admin.pesanan') }}">🧾 Pesanan Masuk</a> --}}
+    @auth
+        <form method="POST" action="{{ route('logout') }}" class="mt-3 px-3">
+            @csrf
+            <button type="submit" class="btn btn-light w-100 text-start">
+                Logout
+            </button>
+        </form>
+    @endauth
+    @guest
+        <a href="{{ route('login') }}" class="mt-3 d-block px-3 text-white text-decoration-none">🔑 Login</a>
+    @endguest
 </div>
 
 <div class="content">
