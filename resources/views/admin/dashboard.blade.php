@@ -19,13 +19,6 @@
     </div>
 </div>
 
-<div class="mt-4">
-    <div class="alert alert-info">
-        <strong>ℹ️ Info:</strong> Fitur pesanan akan dibuat nanti. Saat ini hanya menampilkan data produk dan meja.
-    </div>
-</div>
-
-
 {{-- 🔥 Tambahan Statistik --}}
 <div class="row mt-4">
     <div class="col-md-6">
