@@ -1,18 +1,18 @@
 <?php
 
+use App\Http\Controllers\AdminAuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\PesananController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\TableController;
-use App\Http\Controllers\AuthController;
 use App\Http\Controllers\OrderController;
 
 // Login Admin
-Route::get('/admin/login', [AuthController::class, 'showLoginForm'])->name('admin.login');
-Route::post('/admin/login', [AuthController::class, 'login'])->name('admin.login.post');
-Route::post('/admin/logout', [AuthController::class, 'logout'])->name('admin.logout');
+Route::get('/admin/login', [AdminauthController::class, 'showLoginForm'])->name('admin.login');
+Route::post('/admin/login', [AdminAuthController::class, 'login'])->name('admin.login.post');
+Route::post('/admin/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
 
 Route::get('/', [OrderController::class, 'index'])->name('customer.menu');
 Route::post('/order/store', [OrderController::class, 'store'])->name('order.store');

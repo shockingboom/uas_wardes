@@ -112,6 +112,40 @@
             padding: 15px 0;
             margin-top: 40px;
         }
+        /* Tambahan untuk fitur pencarian */
+        .search-container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .search-input-group {
+            position: relative;
+        }
+        .search-input-group .form-control {
+            border-radius: 25px;
+            padding-left: 45px;
+            border: 1px solid #e0e0e0;
+        }
+        .search-input-group .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+            z-index: 10;
+        }
+        .no-results {
+            text-align: center;
+            padding: 40px 20px;
+            color: #6c757d;
+        }
+        .no-results i {
+            font-size: 48px;
+            margin-bottom: 15px;
+            color: #dee2e6;
+        }
     </style>
 </head>
 <body>
@@ -165,6 +199,14 @@
     <div class="container my-5">
         <h4 class="fw-bold mb-3 text-success">Menu</h4>
 
+        <!-- Fitur Pencarian Menu -->
+        <div class="search-container">
+            <div class="search-input-group">
+                <i class="bi bi-search search-icon"></i>
+                <input type="text" id="search-menu" class="form-control" placeholder="Cari menu makanan atau minuman...">
+            </div>
+        </div>
+
         <!-- Tabs -->
         <ul class="nav nav-pills mb-4" id="menuTabs" role="tablist">
             <li class="nav-item" role="presentation">
@@ -181,9 +223,9 @@
         <div class="tab-content" id="menuTabContent">
             <!-- Semua -->
             <div class="tab-pane fade show active" id="semua" role="tabpanel" aria-labelledby="semua-tab" tabindex="0">
-                <div class="row g-4">
+                <div class="row g-4" id="semua-menu">
                     @forelse($items as $item)
-                        <div class="col-md-3 col-sm-6">
+                        <div class="col-md-3 col-sm-6 menu-item" data-name="{{ strtolower($item->nama) }}" data-category="{{ strtolower($item->kategori) }}">
                             <div class="card menu-card">
                                 @if($item->gambar)
                                 <img src="{{ asset('storage/' . $item->gambar) }}" alt="{{ $item->nama }}">
@@ -211,9 +253,9 @@
 
             <!-- Makanan -->
             <div class="tab-pane fade" id="makanan" role="tabpanel" aria-labelledby="makanan-tab" tabindex="0">
-                <div class="row g-4">
+                <div class="row g-4" id="makanan-menu">
                     @forelse($items->where('kategori', 'Makanan') as $item)
-                        <div class="col-md-3 col-sm-6">
+                        <div class="col-md-3 col-sm-6 menu-item" data-name="{{ strtolower($item->nama) }}" data-category="{{ strtolower($item->kategori) }}">
                             <div class="card menu-card">
                                 @if($item->gambar)
                                 <img src="{{ asset('storage/' . $item->gambar) }}" alt="{{ $item->nama }}">
@@ -241,9 +283,9 @@
 
             <!-- Minuman -->
             <div class="tab-pane fade" id="minuman" role="tabpanel" aria-labelledby="minuman-tab" tabindex="0">
-                <div class="row g-4">
+                <div class="row g-4" id="minuman-menu">
                     @forelse($items->where('kategori', 'Minuman') as $item)
-                        <div class="col-md-3 col-sm-6">
+                        <div class="col-md-3 col-sm-6 menu-item" data-name="{{ strtolower($item->nama) }}" data-category="{{ strtolower($item->kategori) }}">
                             <div class="card menu-card">
                                 @if($item->gambar)
                                 <img src="{{ asset('storage/' . $item->gambar) }}" alt="{{ $item->nama }}">
@@ -304,7 +346,64 @@
             
             // Initialize cart count
             updateCartCount();
+
+            // Initialize search functionality
+            initializeSearch();
         });
+
+        // Search functionality
+        function initializeSearch() {
+            const searchInput = document.getElementById('search-menu');
+            
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase().trim();
+                filterMenuItems(searchTerm);
+            });
+
+            // Clear search when changing tabs
+            document.querySelectorAll('#menuTabs button[data-bs-toggle="pill"]').forEach(tab => {
+                tab.addEventListener('shown.bs.tab', function() {
+                    searchInput.value = '';
+                    filterMenuItems('');
+                });
+            });
+        }
+
+        function filterMenuItems(searchTerm) {
+            const activeTab = document.querySelector('.tab-pane.active');
+            const menuItems = activeTab.querySelectorAll('.menu-item');
+            let hasVisibleItems = false;
+
+            menuItems.forEach(item => {
+                const itemName = item.getAttribute('data-name');
+                const itemCategory = item.getAttribute('data-category');
+                
+                if (searchTerm === '' || itemName.includes(searchTerm) || itemCategory.includes(searchTerm)) {
+                    item.style.display = 'block';
+                    hasVisibleItems = true;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+
+            // Show/hide no results message
+            let noResultsMsg = activeTab.querySelector('.no-results-message');
+            
+            if (!hasVisibleItems) {
+                if (!noResultsMsg) {
+                    noResultsMsg = document.createElement('div');
+                    noResultsMsg.className = 'no-results no-results-message';
+                    noResultsMsg.innerHTML = `
+                        <i class="bi bi-search"></i>
+                        <h5 class="fw-semibold mb-2">Menu tidak ditemukan</h5>
+                        <p class="text-muted">Coba kata kunci lain atau periksa ejaan</p>
+                    `;
+                    activeTab.appendChild(noResultsMsg);
+                }
+            } else if (noResultsMsg) {
+                noResultsMsg.remove();
+            }
+        }
 
         // Initialize cart from localStorage
         function getCart() {

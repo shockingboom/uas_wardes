@@ -9,7 +9,7 @@
     body { font-family: 'Poppins', sans-serif; background-color: #f8fafc; }
     .sidebar {
         width: 240px;
-        background: #0d6efd;
+        background: ForestGreen;
         color: white;
         position: fixed;
         height: 100%;
@@ -22,7 +22,7 @@
         text-decoration: none;
     }
     .sidebar a:hover {
-        background-color: #0b5ed7;
+        background-color: limegreen;
     }
     .sidebar .logout-btn {
         position: absolute;
@@ -63,13 +63,17 @@
     <a href="{{ route('admin.table.index') }}">🪑 Manajemen Meja</a>
     <a href="{{ route('admin.pesanan.index') }}">📋 Status Pesanan</a>
     {{-- <a href="{{ route('admin.pesanan') }}">🧾 Pesanan Masuk</a> --}}
-    
-    <div class="logout-btn">
-        <form method="POST" action="{{ route('logout') }}">
+    @auth
+        <form method="POST" action="{{ route('logout') }}" class="mt-3 px-3">
             @csrf
-            <button type="submit">🚪 Logout</button>
+            <button type="submit" class="btn w-100 text-start" style="background-color: darkgreen; color: white;">
+                🚪 Logout
+            </button>
         </form>
-    </div>
+    @endauth
+    @guest
+        <a href="{{ route('login') }}" class="mt-3 d-block px-3 text-white text-decoration-none">🔑 Login</a>
+    @endguest
 </div>
 
 <div class="content">
