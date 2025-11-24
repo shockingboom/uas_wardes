@@ -262,11 +262,7 @@ class OrderController extends Controller
 
             // Format nomor dengan kode negara jika belum ada
             $phone = $order->customer_phone;
-            if (substr($phone, 0, 1) === '0') {
-                $phone = '62' . substr($phone, 1); // Ubah 08xxx menjadi 628xxx
-            } elseif (substr($phone, 0, 2) !== '62') {
-                $phone = '62' . $phone;
-            }
+            
 
             // Kirim ke customer via WhatsappService
             $response = $this->whatsappService->sendMessageToCustomer($phone, $message);

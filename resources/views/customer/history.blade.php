@@ -119,6 +119,8 @@
                                 <i class="bi bi-credit-card me-1"></i>Menunggu Pembayaran
                             @elseif($order->status === 'processing')
                                 <i class="bi bi-hourglass-split me-1"></i>Diproses
+                            @elseif($order->status === 'waiting_payment')
+                                <i class="bi bi-check-circle-fill me-1"></i>Menunggu Pembayaran
                             @elseif($order->status === 'completed')
                                 <i class="bi bi-check-circle-fill me-1"></i>Selesai
                             @elseif($order->status === 'cancelled')
