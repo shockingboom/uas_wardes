@@ -105,13 +105,8 @@ class PesananController extends Controller
             $message .= "Terima kasih telah memesan! 🙏\n";
             $message .= "*Warung Desa*";
 
-            // Format nomor dengan kode negara jika belum ada
+            
             $phone = $order->customer_phone;
-            if (substr($phone, 0, 1) === '0') {
-                $phone = '62' . substr($phone, 1);
-            } elseif (substr($phone, 0, 2) !== '62') {
-                $phone = '62' . $phone;
-            }
 
             // Kirim ke customer
             $response = $this->whatsappService->sendMessageToCustomer($phone, $message);
