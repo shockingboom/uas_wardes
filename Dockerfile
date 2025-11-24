@@ -1,28 +1,53 @@
-FROM php:8.2-fpm
+FROM node:20-alpine AS node-builder
 
-RUN apt-get update && apt-get install -y \
-    git zip unzip curl libpng-dev libjpeg62-turbo-dev libfreetype6-dev \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd pdo_mysql
-
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
-
-RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
-    && apt-get install -y nodejs
-
-WORKDIR /var/www/html
+WORKDIR /app
 
 COPY package*.json ./
 
-RUN npm install
+RUN npm ci --only=production
 
 COPY . .
 
-RUN composer install --no-interaction --prefer-dist --optimize-autoloader
-
 RUN npm run build
 
-RUN chmod -R 777 storage bootstrap/cache
+FROM php:8.2-fpm-alpine
+
+RUN apk add --no-cache \
+    git \
+    zip \
+    unzip \
+    curl \
+    libpng-dev \
+    libjpeg-turbo-dev \
+    freetype-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install -j$(nproc) gd pdo_mysql \
+    && apk del --no-cache freetype-dev libjpeg-turbo-dev libpng-dev
+
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+WORKDIR /var/www/html
+
+COPY composer*.json ./
+
+RUN composer install \
+    --no-dev \
+    --no-interaction \
+    --prefer-dist \
+    --optimize-autoloader \
+    --no-scripts
+
+COPY . .
+
+COPY --from=node-builder /app/public/build ./public/build
+
+RUN composer run-script post-autoload-dump
+
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html/storage \
+    && chmod -R 755 /var/www/html/bootstrap/cache
+
+USER www-data
 
 EXPOSE 8080
 
