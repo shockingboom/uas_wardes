@@ -108,19 +108,22 @@
                         </div>
                         <span class="status-badge 
                             @if($order->status === 'pending') status-pending
+                            @elseif($order->status === 'waiting_payment') status-processing
                             @elseif($order->status === 'processing') status-processing
                             @elseif($order->status === 'completed') status-completed
-                            @else status-cancelled
+                            @elseif($order->status === 'cancelled') status-cancelled
                             @endif">
                             @if($order->status === 'pending')
                                 <i class="bi bi-clock-fill me-1"></i>Pending
+                            @elseif($order->status === 'waiting_payment')
+                                <i class="bi bi-credit-card me-1"></i>Menunggu Pembayaran
                             @elseif($order->status === 'processing')
                                 <i class="bi bi-hourglass-split me-1"></i>Diproses
                             @elseif($order->status === 'waiting_payment')
                                 <i class="bi bi-check-circle-fill me-1"></i>Menunggu Pembayaran
                             @elseif($order->status === 'completed')
                                 <i class="bi bi-check-circle-fill me-1"></i>Selesai
-                            @else
+                            @elseif($order->status === 'cancelled')
                                 <i class="bi bi-x-circle-fill me-1"></i>Dibatalkan
                             @endif
                         </span>

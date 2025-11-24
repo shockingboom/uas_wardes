@@ -24,6 +24,25 @@
     .sidebar a:hover {
         background-color: limegreen;
     }
+    .sidebar .logout-btn {
+        position: absolute;
+        bottom: 20px;
+        width: calc(100% - 40px);
+        margin: 0 20px;
+    }
+    .sidebar .logout-btn form button {
+        width: 100%;
+        background-color: #dc3545;
+        border: none;
+        color: white;
+        padding: 12px 20px;
+        text-align: left;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+    .sidebar .logout-btn form button:hover {
+        background-color: #bb2d3b;
+    }
     .content {
         margin-left: 250px;
         padding: 20px;
